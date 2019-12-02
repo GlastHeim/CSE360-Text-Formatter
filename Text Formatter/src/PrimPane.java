@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import java.io.*;
+import java.util.Scanner;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 //needed for panes
@@ -23,6 +24,7 @@ public class PrimPane extends HBox {
     private GridPane gridPane;          //gridpane to hold our stuff
     private FileChooser fileC;
     private File inFile, outFile;
+    private Formatter forma;        //does the actual formatting
     //
     public PrimPane(){
         //file chooser
@@ -70,6 +72,32 @@ public class PrimPane extends HBox {
         this.getChildren().add(gridPane); //set to our HBox
     }
     
+    public void inReader() throws IOException{        
+        Scanner in = new Scanner(inFile);
+        ArrayList<String> holder = new ArrayList<String>();
+        String check = new String();
+        while(in.hasNextLine()){
+            holder.add(in.nextLine());
+        }
+        //put it in formatter here
+        //for demo purposes:
+        check = "";
+        for (int i = 0; i < holder.size();i++){
+            check = check+holder.get(i)+"\n";
+        }
+        outputDetails.setText(check);
+    }
+    
+    public void outWriter() throws IOException{
+        outFile = new File(outTF.getText());//open file w/name
+        
+        FileWriter write1 = new FileWriter(outFile);
+        PrintWriter write2 = new PrintWriter(write1);
+        write2.print(outputDetails.getText());
+        write2.close();
+        //writer.append(outputDetails.getText());
+    }
+    
     private class ButtonHandler implements EventHandler<ActionEvent> {
         //Override the abstact method handle()
 
@@ -83,7 +111,7 @@ public class PrimPane extends HBox {
                 if (inFile != null){
                     inTF.setText(inFile.getName());
                 } else {
-                    inTF.setText("File Not Opened");
+                    inTF.setText("File Not Opened");    //spawn error pop-up
                 }
                 
             } else if (e.getSource() == soutput){
@@ -93,12 +121,27 @@ public class PrimPane extends HBox {
                 //save
                 //save where? - can we alter save location?
                 //may need to default to textformatter location
+                if (outTF.getText().equals("")){//if no name for output and we push it..
+                    outTF.setText("temp: ERR");//make error popup
+                } else {
+                    //otherwise save contents of outputDetails
+                    try{
+                        outWriter();
+                    } catch (Exception exc) {
+                            //
+                    }
+                }
             } else if (e.getSource() == format){
                 //activate format function
                 //will call something else to do the actual hard work
                 //whatever does will keep track of errors and actual output
                 //and set text of output here
                 //and return errors with TextFormatter's setErr function
+                try{
+                    inReader();
+                } catch (Exception exc){
+                    //throw error popup
+                }
             }
         }
     }
