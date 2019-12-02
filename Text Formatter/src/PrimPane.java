@@ -10,6 +10,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import java.io.*;
 import java.util.Scanner;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 //needed for panes
@@ -111,7 +113,11 @@ public class PrimPane extends HBox {
                 if (inFile != null){
                     inTF.setText(inFile.getName());
                 } else {
-                    inTF.setText("File Not Opened");    //spawn error pop-up
+                    //inTF.setText("File Not Opened");    //spawn error pop-up
+                    Alert errorAlert = new Alert(AlertType.ERROR);
+                    errorAlert.setHeaderText("File selection error");
+                    errorAlert.setContentText("Unknown file selection error.\nPlease ensure a valid file was selected.");
+                    errorAlert.showAndWait();
                 }
                 
             } else if (e.getSource() == soutput){
@@ -122,13 +128,21 @@ public class PrimPane extends HBox {
                 //save where? - can we alter save location?
                 //may need to default to textformatter location
                 if (outTF.getText().equals("")){//if no name for output and we push it..
-                    outTF.setText("temp: ERR");//make error popup
+                    //outTF.setText("temp: ERR");//make error popup
+                    Alert errorAlert = new Alert(AlertType.ERROR);
+                    errorAlert.setHeaderText("Invalid output file name");
+                    errorAlert.setContentText("Must be at least one non-punctuation character");
+                    errorAlert.showAndWait();
                 } else {
                     //otherwise save contents of outputDetails
                     try{
                         outWriter();
                     } catch (Exception exc) {
-                            //
+                            //error popup
+                            Alert errorAlert = new Alert(AlertType.ERROR);
+                            errorAlert.setHeaderText("File write error");
+                            errorAlert.setContentText("Unknown error while trying to write to file.\nFile may still have been created.\nPlease ensure desired file/name is available.");
+                            errorAlert.showAndWait();
                     }
                 }
             } else if (e.getSource() == format){
@@ -141,6 +155,10 @@ public class PrimPane extends HBox {
                     inReader();
                 } catch (Exception exc){
                     //throw error popup
+                    Alert errorAlert = new Alert(AlertType.ERROR);
+                    errorAlert.setHeaderText("File read error");
+                    errorAlert.setContentText("Unknown error reading chosen file.\nPlease ensure file exists and is unformatted text.");
+                    errorAlert.showAndWait();
                 }
             }
         }
