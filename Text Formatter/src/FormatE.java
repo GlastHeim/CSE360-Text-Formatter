@@ -276,6 +276,7 @@ public class FormatE {
                             //error/warning
                         }
                         makeTitle(inTem);
+                        qTitle = false; //title done.
                     }
                 } else if (blanks > 0){
                     makeBlanks(blanks);
