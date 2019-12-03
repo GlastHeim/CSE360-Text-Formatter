@@ -11,14 +11,14 @@ public class FormatE {
     boolean equal = false;  //equally space across line or not;
     boolean wrapping = false;   //wrapping?
     boolean doubleSpace = false;    //double space or not
-    boolean qTitle = false;         //check immediately
+    boolean qTitle = false;         //check immediately - done
     //paragraph - happens once or multiple times?
     int parSpace = 0;               //number of paragraph spaces
-    int blanks = 0;                 //check immediately
-    boolean twoCol = false; //two columns or not.
+    int blanks = 0;                 //check immediately - done
+    boolean twoCol = false; //two columns or not. - halfdone
     private ArrayList<String> output = new ArrayList<String>();
     private ArrayList<String> errors = new ArrayList<String>();
-    private String wrapBuf = "";    //wrapping buffer
+    private String wrapBuf = "";    //wrapping buffer - not needed?
     
     //modifies control for all commands but paragraph
     void proCom(String comm){
@@ -165,7 +165,13 @@ public class FormatE {
         }
     }
     
-    void makeTitle(String formatMe){
+    void makeTitle(String input){
+        String formatMe = "";
+        if (input.length() > lineLen){
+            formatMe = input.substring(0,lineLen);
+        } else {
+            formatMe = input;
+        }
         int spaces = (lineLen-formatMe.length())/2;
         String outStr = "";
         for (int i = 0; i < spaces; i++){
@@ -180,6 +186,73 @@ public class FormatE {
     
     void handleStr(String formatMe){
         //all of the other reindeer i uh mean formatting
+        String handler = "";
+        if (!twoCol){   //if NOT two columns..
+            //normal
+            //we'll handle -e later - for now, justify
+            //(it's right outside your function, now justify!)
+            if (equal){ //incompatible with the other options, i think
+                
+            } else {    //justify!
+                handler = formatMe;
+                if (justif == 0 && parSpace > 0){
+                    String temp = "";
+                    for (int i = 0; i < parSpace; i++){
+                        temp = " ";
+                    }
+                    handler = temp+handler;
+                } else if (justif == 1){
+                    String temp = "";
+                    for (int i = 0; i < (lineLen-formatMe.length())/2; i++){
+                        temp = temp+" ";
+                    }
+                    handler = temp+handler;
+                } else if (justif == 2){
+                    String temp = "";
+                    for (int i = 0; i < (lineLen-formatMe.length()); i++){
+                        temp = temp+" ";
+                    }
+                    handler = temp+handler;
+                }
+            }
+            //
+        } else {        //IF two columns..
+            //use line length 80 instead
+            //assume for now this baleets all other formatting
+            if (equal){ //incompatible with the other options, i think
+                
+            } else {    //justify!
+                //we need to do this differently - just including this for
+                //reference
+                handler = formatMe;
+                if (justif == 0 && parSpace > 0){
+                    String temp = "";
+                    for (int i = 0; i < parSpace; i++){
+                        temp = " ";
+                    }
+                    handler = temp+handler;
+                } else if (justif == 1){
+                    String temp = "";
+                    for (int i = 0; i < (lineLen-formatMe.length())/2; i++){
+                        temp = temp+" ";
+                    }
+                    handler = temp+handler;
+                } else if (justif == 2){
+                    String temp = "";
+                    for (int i = 0; i < (lineLen-formatMe.length()); i++){
+                        temp = temp+" ";
+                    }
+                    handler = temp+handler;
+                }
+            }
+        }
+        //after we format formatMe and put it in handler...
+        if (doubleSpace){
+            handler = handler+"\n\n";   //double space
+        } else {
+            handler = handler+"\n";     //single space
+        }
+        output.add(handler);
     }
     
     //handles it
@@ -212,13 +285,13 @@ public class FormatE {
                 //is it too big/too small?
                 //we'll chop up too-large strings, and put them out line by line
                 temp = temp+inTem;
-                if (temp.length()+parSpace > lineLen){
-                    handleStr(temp.substring(0, lineLen));
+                if (temp.length()+parSpace+(twoCol?10:0) > lineLen){
+                    handleStr(temp.substring(0, lineLen-(parSpace+(twoCol?10:0))));
                     temp = temp.substring(lineLen);
-                } else if (temp.length()+parSpace <= lineLen && wrapping == false){
+                } else if (temp.length()+parSpace+(twoCol?10:0) <= lineLen && wrapping == false){
                     handleStr(temp);
                     temp = "";
-                } else if (temp.length()+parSpace <= lineLen && wrapping == true){
+                } else if (temp.length()+parSpace+(twoCol?10:0) <= lineLen && wrapping == true){
                     //get another line.. unless the next line is a command line
                     //or there is no next line, then print
                     if (i+1 < input.size()){
