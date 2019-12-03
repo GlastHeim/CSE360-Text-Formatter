@@ -231,6 +231,7 @@ public class FormatE {
                     }
                     handler = temp+handler;
                 }
+                //output.add(handler);
             }
             //
         } else {        //IF two columns..
@@ -242,10 +243,10 @@ public class FormatE {
                 //we need to do this differently - just including this for
                 //reference
                 //done differently
-                String hand1 = formatMe.substring(0,(35<formatMe.length()?35:formatMe.length()));
+                String hand1 = formatMe.substring(0,(35<formatMe.length()?35:formatMe.length())-parSpace);
                 String hand2 = "";
                 if (formatMe.length() > 35){
-                    hand2 = formatMe.substring(35,formatMe.length());
+                    hand2 = formatMe.substring(35-parSpace,formatMe.length());
                 }
                 
                 if (justif == 0 && parSpace > 0){
@@ -253,20 +254,31 @@ public class FormatE {
                     for (int i = 0; i < parSpace; i++){
                         temp = " ";
                     }
-                    handler = temp+handler;
+                    hand1 = temp+hand1;
                 } else if (justif == 1){
-                    String temp = "";
-                    for (int i = 0; i < (lineLen-formatMe.length())/2; i++){
-                        temp = temp+" ";
+                    String temp1 = "";
+                    for (int i = 0; i < (35-hand1.length())/2; i++){
+                        temp1 = temp1+" ";
                     }
-                    handler = temp+handler;
+                    hand1 = temp1+hand1;
+                    String temp2 = "";
+                    for (int i = 0; i < (35-hand2.length())/2; i++){
+                        temp2 = temp2+" ";
+                    }
+                    hand2 = temp2+hand2;
                 } else if (justif == 2){
-                    String temp = "";
-                    for (int i = 0; i < (lineLen-formatMe.length()); i++){
-                        temp = temp+" ";
+                    String temp1 = "";
+                    for (int i = 0; i < (35-hand1.length()); i++){
+                        temp1 = temp1+" ";
                     }
-                    handler = temp+handler;
+                    hand1 = temp1+hand1;
+                    String temp2 = "";
+                    for (int i = 0; i < (35-hand2.length()); i++){
+                        temp2 = temp2+" ";
+                    }
+                    hand2 = temp2+hand2;
                 }
+                handler = hand1+"          "+hand2;
             }
         }
         //after we format formatMe and put it in handler...
