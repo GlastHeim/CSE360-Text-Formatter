@@ -4,6 +4,7 @@
 
 import java.util.*;
 import java.io.*;
+//import org.apache.commons.lang3.StringUtils;	// needed to center align
 // End needed
 
 public class Formatter{
@@ -20,8 +21,10 @@ public class Formatter{
 	private boolean columns = false;	// true = 2 columns, false = 1 column
 	
 	// File input/reading
+	private int tracker = 0;	// keeps track of current place in inputFileAL
 	private ArrayList<String> inputFileAL = new ArrayList<String>();
-	private ArrayList<String> errorLog = new ArrayList<String>();
+	protected ArrayList<String> errorLog = new ArrayList<String>();
+	protected File outputFile = new File("Output.txt");
 	
 	// Default constructor
 	public Formatter(ArrayList<String> inputAL) {
@@ -29,17 +32,17 @@ public class Formatter{
 			inputFileAL.add(inputAL.get(i));
 		}
 	}
-	
-	// setFormattingVals - Uses switch case to determine which formatting
+			
+	// setFormattingVals() - Uses switch case to determine which formatting
 	//	defaults to change in accordance with command located in given
 	//	element in the inputFileAL
 	public void setFormattingVals() {
-		for (int i = 0; i < inputFileAL.size(); i++) {
+		do {
 			// Checking if String is a formatting command
-			if (inputFileAL.get(i).charAt(0) == '-'){
-				String command = inputFileAL.get(i);
+			if (inputFileAL.get(tracker).charAt(0) == '-'){
+				String command = inputFileAL.get(tracker);
 				String commandSub = command.substring(1, (command.length() - 1));
-				
+							
 				// Checking which formatting command should be adjusted
 				switch(commandSub.charAt(0)) {
 				// Line length
@@ -49,7 +52,12 @@ public class Formatter{
 						newVal = Integer.parseInt(commandSub.substring(1, (commandSub.length() - 1)));
 					}catch(NumberFormatException e) {
 						newVal = 80;	// default value
-						errorLog.add("Invalid line length: " + commandSub);
+						errorLog.add("Invalid line length: Input line " + (tracker + 1));
+					}
+					
+					if (newVal <= 0 || newVal > 80) {
+						newVal = 80;
+						errorLog.add("Invalid line length: Integer line " + (tracker + 1));
 					}
 					lineLen = newVal;
 					break;
@@ -91,11 +99,21 @@ public class Formatter{
 					break;
 				// Paragraph
 				case 'p':
-					try {
-						newVal = Integer.parseInt(commandSub.substring(1, (commandSub.length() - 1)));
-					}catch(NumberFormatException e) {
-						newVal = 0;	// default value
-						errorLog.add("Invalid paragraph spacing: " + commandSub);
+					if (align == 0) {
+						try {
+							newVal = Integer.parseInt(commandSub.substring(1, (commandSub.length() - 1)));
+						}catch(NumberFormatException e) {
+							newVal = 0;	// default value
+							errorLog.add("Invalid paragraph indent: Input line " + (tracker + 1));
+						}
+						
+						if (newVal <= 0 || newVal > 80) {
+							newVal = 0;
+							errorLog.add("Invalid paragraph indent: Integer line " + (tracker + 1));
+						}
+					}else {	// Cannot indent non-left aligned paragraphs
+						newVal = 0; // default value
+						errorLog.add("Cannot indent paragraph on non-left aligned text: Line " + (tracker + 1));
 					}
 					paragraph = newVal;
 					break;
@@ -105,7 +123,12 @@ public class Formatter{
 						newVal = Integer.parseInt(commandSub.substring(1, (commandSub.length() - 1)));
 					}catch(NumberFormatException e) {
 						newVal = 0;	// default value
-						errorLog.add("Invalid number of blank lines: " + commandSub);
+						errorLog.add("Invalid blank line: Input line " + (tracker + 1));
+					}
+					
+					if (newVal < 0) {
+						newVal = 0;
+						errorLog.add("Invalid blank line: Integer line: " + (tracker + 1));
 					}
 					blankLn = newVal;
 					break;
@@ -115,24 +138,101 @@ public class Formatter{
 						newVal = Integer.parseInt(commandSub.substring(1, (commandSub.length() - 1)));
 					}catch(NumberFormatException e) {
 						newVal = 1;	// default value
-						errorLog.add("Invalid number of columns: " + commandSub);
+						errorLog.add("Invalid column number: Input line " + (tracker + 1));
 					}
 					if (newVal == 2) {
 						columns = true;
+					}else if (newVal == 1) {
+						columns = false;
 					}else {
 						columns = false;
+						errorLog.add("Invalid column number: Integer line " + (tracker + 1));
 					}
 					break;
 				// Invalid command
 				default:
-					errorLog.add("Invalid command: " + commandSub);
+					errorLog.add("Invalid formatting command: Line " + (tracker + 1));
 					break;
 				}
+				
+				tracker++;
+				
 			}else {}	// String is not a formatting command
-		}
+	
+		}while(inputFileAL.get(tracker).charAt(0) == '-');
 		
 	}// End of setFormattingVals()
 	
-	
+	// formatText() - Reviews values of formatting variables and applies to
+	//	text in inputFileAL; writes to output file; should be called after 
+	//	setFormattingVals() or else only default settings will be used
+	public void formatText() throws IOException {
+		
+		FileWriter writer = new FileWriter(outputFile);
+		
+		// Formatting non-command text	- ***SERIES OF NESTED IF-ELSE STMTS?
+		do {
+			// Blank lines
+			if (blankLn != 0) {
+				for(int i = 0; i < blankLn; i++) {
+					writer.write("\n");
+				}
+			}
+			
+			// Spacing
+			if (singleSpacing == true) {	// double-spacing
+				// Line length
+				if (lineLen != 80) {
+					// Title - this should only work once per method call
+					if (title == true) {
+						// need to center
+						// need to add dashes on next line
+						
+						title = false;	// Turning off so only 1st line is titled
+					}
+				}else {
+					// Title
+				
+					// Columns
+				
+					// Text wrapping
+				
+					// Alignment
+				
+					// Paragraph
+				
+					// Equal spacing
+				}
+				
+				writer.write("\n");	// Adding extra blank line
+			}else {							//else -> single-spacing
+				// Line length
+				
+				// Title
+				
+				// Columns
+				
+				// Text wrapping
+				
+				// Alignment
+				
+				// Paragraph
+				
+				// Equal spacing
+			}
+			
+			tracker++;
+			
+		}while(inputFileAL.get(tracker) != null && inputFileAL.get(tracker).charAt(0) != '-');
+		
+		if (inputFileAL.get(tracker).charAt(0) == '-') {
+			setFormattingVals();
+		}
+		
+		writer.close();
+		
+		//***Finished writing to output file?
+		//***Create fileReader object in PrimPane?
+	}// End of formatText()
 	
 }// End of Formatter class
