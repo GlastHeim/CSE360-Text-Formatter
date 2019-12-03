@@ -127,6 +127,7 @@ public class FormatE {
             case 'p':
                 //paragraph spacing
                 //handle it
+                //blah
                 break;
             case 'b':
                 //number of blank lines
@@ -240,7 +241,13 @@ public class FormatE {
             } else {    //justify!
                 //we need to do this differently - just including this for
                 //reference
-                handler = formatMe;
+                //done differently
+                String hand1 = formatMe.substring(0,(35<formatMe.length()?35:formatMe.length()));
+                String hand2 = "";
+                if (formatMe.length() > 35){
+                    hand2 = formatMe.substring(35,formatMe.length());
+                }
+                
                 if (justif == 0 && parSpace > 0){
                     String temp = "";
                     for (int i = 0; i < parSpace; i++){
