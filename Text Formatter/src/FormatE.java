@@ -21,7 +21,7 @@ public class FormatE {
     private String wrapBuf = "";    //wrapping buffer - not needed?
     
     //modifies control for all commands but paragraph
-    void proCom(String comm){
+    private void proCom(String comm){
         String temp = comm.substring(1);
         int ret = 0;
         boolean error = false;
@@ -159,13 +159,13 @@ public class FormatE {
         }
     }
     
-    void makeBlanks(int blankLines){
+    private void makeBlanks(int blankLines){
         for (int i = 0; i < blankLines; i++){
             output.add("\n");     //a blank line with nothing on/in it?
         }
     }
     
-    void makeTitle(String input){
+    private void makeTitle(String input){
         String formatMe = "";
         if (input.length() > lineLen){
             formatMe = input.substring(0,lineLen);
@@ -184,7 +184,7 @@ public class FormatE {
         output.add(outStr);
     }
     
-    void handleStr(String formatMe){
+    private void handleStr(String formatMe){
         //all of the other reindeer i uh mean formatting
         String handler = "";
         if (!twoCol){   //if NOT two columns..
@@ -256,7 +256,7 @@ public class FormatE {
     }
     
     //handles it
-    void handleIt(ArrayList<String> input){
+    public void handleIt(ArrayList<String> input){
         String temp = "";
         boolean collecting = false;
         for (int i = 0; i < input.size(); i++){
