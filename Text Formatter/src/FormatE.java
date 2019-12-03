@@ -37,7 +37,7 @@ public class FormatE {
     }
     
     //modifies control for all commands but paragraph
-    private void proCom(String comm){
+    private void proCom(String comm, int inNum){
         String temp = comm.substring(1);
         int ret = 0;
         boolean error = false;
@@ -176,12 +176,14 @@ public class FormatE {
         }
     }
     
+    //shouldnt need error handling
     private void makeBlanks(int blankLines){
         for (int i = 0; i < blankLines; i++){
             output.add("\n");     //a blank line with nothing on/in it?
         }
     }
     
+    //shouldnt need error handling
     private void makeTitle(String input){
         String formatMe = "";
         if (input.length() > lineLen){
@@ -201,6 +203,7 @@ public class FormatE {
         output.add(outStr);
     }
     
+    //shouldn't need error handling
     private void handleStr(String formatMe){
         //all of the other reindeer i uh mean formatting
         String handler = "";
@@ -299,7 +302,7 @@ public class FormatE {
             //we now have a string - check if command
             if (inTem.charAt(0) == '-'){
                 //a command/control string - handle it
-                proCom(inTem);
+                proCom(inTem,i+1);
                 if (qTitle){
                     i++;
                     if (i < input.size()){
