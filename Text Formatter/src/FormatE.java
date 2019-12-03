@@ -20,6 +20,22 @@ public class FormatE {
     private ArrayList<String> errors = new ArrayList<String>();
     private String wrapBuf = "";    //wrapping buffer - not needed?
     
+    public String getOut(){
+        String retval = "";
+        for (int i = 0; i < output.size(); i++){
+            retval = retval+output.get(i);
+        }
+        return retval;
+    }
+    
+    public String getErr(){
+        String retval = "";
+        for (int i = 0; i < errors.size(); i++){
+            retval = retval+errors.get(i);
+        }
+        return retval;
+    }
+    
     //modifies control for all commands but paragraph
     private void proCom(String comm){
         String temp = comm.substring(1);
