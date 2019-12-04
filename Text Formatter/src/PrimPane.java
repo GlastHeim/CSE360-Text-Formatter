@@ -19,6 +19,8 @@ import javafx.stage.Stage;
 /*
 // uses code from an assignment about laptops which required a gui.
 */
+//package CSE360TFS;
+
 public class PrimPane extends HBox {
     private TextArea outputDetails;      //for user to read formatted text
     private Button cinput, soutput, format; //choose in, save out, format
@@ -26,12 +28,15 @@ public class PrimPane extends HBox {
     private GridPane gridPane;          //gridpane to hold our stuff
     private FileChooser fileC;
     private File inFile, outFile;
-    private Formatter forma;        //does the actual formatting
+    private ErrPane sendErrs;
+    //private Formatter forma;        //does the actual formatting
+    private FormatE forma2;         //kyle's homegrown formatter
     //
-    public PrimPane(){
+    public PrimPane(ErrPane errMe){
         //file chooser
         //set up the pane/gui bit here
         //first text area
+        sendErrs = errMe;
         fileC = new FileChooser();
         fileC.setTitle("Choose File");
         outputDetails = new TextArea();
@@ -77,16 +82,22 @@ public class PrimPane extends HBox {
     public void inReader() throws IOException{        
         Scanner in = new Scanner(inFile);
         ArrayList<String> holder = new ArrayList<String>();
-        String check = new String();
+        String check = "";
         while(in.hasNextLine()){
             holder.add(in.nextLine());
         }
         //put it in formatter here
+        forma2 = new FormatE();
+        forma2.handleIt(holder);
+        check = forma2.getOut();
+        String errs = forma2.getErr();
+        sendErrs.setErr(errs);
+        /*
         //for demo purposes:
         check = "";
         for (int i = 0; i < holder.size();i++){
             check = check+holder.get(i)+"\n";
-        }
+        }*/
         outputDetails.setText(check);
     }
     

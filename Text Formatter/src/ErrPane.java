@@ -16,6 +16,8 @@ import javafx.scene.paint.Color;
 /*
 // uses code from an assignment about laptops which required a gui.
 */
+//package CSE360TFS;
+
 public class ErrPane extends HBox {
     private TextArea errorDetails;      //for user to read errors
     private Button clear;               //clears errors

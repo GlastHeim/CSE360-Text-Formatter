@@ -3,19 +3,22 @@ import java.util.*;
  *
  * @author Kyle Benda
  */
+
+//package CSE360TFS;
+
 public class FormatE {
     final private int maxLineLen = 120;
     private int lineLen;
-    int justif = 0;         //poor man's enum:
+    private int justif = 0;         //poor man's enum:
                             //justification 0 left, 1 center, 2 right
-    boolean equal = false;  //equally space across line or not;
-    boolean wrapping = false;   //wrapping?
-    boolean doubleSpace = false;    //double space or not
-    boolean qTitle = false;         //check immediately - done
+    private boolean equal = false;  //equally space across line or not;
+    private boolean wrapping = false;   //wrapping?
+    private boolean doubleSpace = false;    //double space or not
+    private boolean qTitle = false;         //check immediately - done
     //paragraph - happens once or multiple times?
-    int parSpace = 0;               //number of paragraph spaces
-    int blanks = 0;                 //check immediately - done
-    boolean twoCol = false; //two columns or not. - halfdone
+    private int parSpace = 0;               //number of paragraph spaces
+    private int blanks = 0;                 //check immediately - done
+    private boolean twoCol = false; //two columns or not. - halfdone
     private ArrayList<String> output = new ArrayList<String>();
     private ArrayList<String> errors = new ArrayList<String>();
     private String wrapBuf = "";    //wrapping buffer - not needed?

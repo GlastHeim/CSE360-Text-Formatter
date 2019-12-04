@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.*;
 import javafx.stage.FileChooser;
 
+//package CSE360TFS;
+
 public class TextFormatter extends Application
 {
     private FileChooser fileC;
@@ -25,8 +27,9 @@ public class TextFormatter extends Application
     {
         fileC = new FileChooser();
         StackPane root = new StackPane();
-        PrimPane prim = new PrimPane();
+        //PrimPane prim = new PrimPane();
  	ErrPane error = new ErrPane();
+        PrimPane prim = new PrimPane(error);
         tabPane = new TabPane();
         Tab tab1 = new Tab();
         tab1.setText("Input Pane");
