@@ -1,10 +1,6 @@
-import java.util.*;
-/**
- *
- * @author Kyle Benda
- */
+//package textFormatter;
 
-//package CSE360TFS;
+import java.util.*;
 
 public class FormatE {
     final private int maxLineLen = 120;
@@ -34,12 +30,12 @@ public class FormatE {
     public String getErr(){
         String retval = "";
         for (int i = 0; i < errors.size(); i++){
-            retval = retval+errors.get(i);
+            retval = retval+(errors.get(i)+"\n");
         }
         return retval;
     }
     
-    //modifies control for all commands but paragraph
+    //modifies control for all commands
     private void proCom(String comm, int inNum){
         String temp = comm.substring(1);
         int ret = 0;
@@ -138,9 +134,28 @@ public class FormatE {
                 break;
             case 'p':
                 //paragraph spacing
-                //handle it
-                //blah
-                break;
+            	temp = temp.substring(1);
+            	ret = 0;
+            	error = false;
+            	try{
+            		ret = Integer.parseInt(temp);
+            	} catch (Exception e){
+            		error = true;
+            		//print error
+            		errors.add("Invalid paragraph indent: Input line " + inNum);
+            	}
+            	if (!error){
+            		if (ret >= 0 && ret <= 80){
+            			parSpace = ret;	
+            		} else {
+            			//write error
+            			errors.add("Invalid paragraph indent: Integer line " + inNum);
+            		}	
+            	} else {
+            		//write error
+            		errors.add("Invalid formatting command: Line " + inNum);
+            	}
+            	break;
             case 'b':
                 //number of blank lines
                 temp = temp.substring(1);
@@ -154,7 +169,7 @@ public class FormatE {
                     errors.add("Invalid blank line input: Line " + inNum);
                 }
                 if (!error){
-                    if (ret > 0){
+                    if (ret >= 0){		// 0 should be allowed and it would just do nothing vs kick an error
                         blanks = ret;
                     } else {
                         //write error
@@ -231,9 +246,33 @@ public class FormatE {
         if (!twoCol){   //if NOT two columns..
             //normal
             //we'll handle -e later - for now, justify
-            //(it's right outside your function, now justify!)
+            //(it's right outside your function, now justify!) headbang, fist pump
             if (equal){ //incompatible with the other options, i think
-                
+           /*     int leftoverSp = lineLen - formatMe.length();
+                if (leftoverSp > 0) {
+                	String temp = formatMe;
+                	//tempAL - holds formatMe as individual words in each element
+                	ArrayList<String> tempAL = new ArrayList<String>();
+                	//tokenizer - splits formatMe up using " " as the delimiting char
+                	StringTokenizer tokenizer = new StringTokenizer(temp, " ");
+                	while (tokenizer.hasMoreElements()) {
+                		tempAL.add(tokenizer.nextToken());
+                	}
+                	//inserting spaces into tempAL
+                	if (leftoverSp < tempAL.size()) {
+                		int j = 1;
+                		for (int i = 0; i < leftoverSp; i++) {
+                			tempAL.add((i + j), " ");
+                			j++;
+                		}
+                	} else {		//more leftover spaces than words in formatMe
+                		
+                	}
+                	//concatenate elements from tempAL back into one string
+                	for (int i = 0; i < tempAL.size(); i++) {
+                		handler = handler + tempAL.get(i) + " ";
+                	}
+                }	*/
             } else {    //justify!
                 handler = formatMe;
                 if (justif == 0 && parSpace > 0){
@@ -257,12 +296,35 @@ public class FormatE {
                 }
                 //output.add(handler);
             }
-            //
         } else {        //IF two columns..
             //use line length 80 instead
             //assume for now this baleets all other formatting
             if (equal){ //incompatible with the other options, i think
-                
+            /*	 int leftoverSp = lineLen - formatMe.length();
+                 if (leftoverSp > 0) {
+                 	String temp = formatMe;
+                 	//tempAL - holds formatMe as individual words in each element
+                 	ArrayList<String> tempAL = new ArrayList<String>();
+                 	//tokenizer - splits formatMe up using " " as the delimiting char
+                 	StringTokenizer tokenizer = new StringTokenizer(temp, " ");
+                 	while (tokenizer.hasMoreElements()) {
+                 		tempAL.add(tokenizer.nextToken());
+                 	}
+                 	//inserting spaces into tempAL
+                 	if (leftoverSp < tempAL.size()) {
+                 		int j = 1;
+                 		for (int i = 0; i < leftoverSp; i++) {
+                 			tempAL.add((i + j), " ");
+                 			j++;
+                 		}
+                 	} else {		//more leftover spaces than words in formatMe
+                 		
+                 	}
+                 	//concatenate elements from tempAL back into one string
+                 	for (int i = 0; i < tempAL.size(); i++) {
+                 		handler = handler + tempAL.get(i) + " ";
+                 	}
+                 }	*/
             } else {    //justify!
                 //we need to do this differently - just including this for
                 //reference
@@ -330,9 +392,11 @@ public class FormatE {
                         inTem = input.get(i);
                         if (inTem.charAt(0) == '-'){
                             //error/warning
+                        	errors.add("Invalid text: Command line " + (i + 1));
                         }
                         if (inTem.length() > lineLen){
                             //error/warning
+                        	errors.add("Invalid text length: Line " + (i + 1));
                         }
                         makeTitle(inTem);
                         qTitle = false; //title done.
@@ -348,6 +412,7 @@ public class FormatE {
                 if (temp.length()+parSpace+(twoCol?10:0) > lineLen){
                     handleStr(temp.substring(0, lineLen-(parSpace+(twoCol?10:0))));
                     temp = temp.substring(lineLen);
+                    errors.add("Line " + (i + 1) + " exceeds max length - cutting to max length.");
                 } else if (temp.length()+parSpace+(twoCol?10:0) <= lineLen && wrapping == false){
                     handleStr(temp);
                     temp = "";
