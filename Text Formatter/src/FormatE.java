@@ -55,6 +55,7 @@ public class FormatE {
                 } catch (Exception e){
                     error = true;
                     //put error on error arraylist
+                    errors.add("Invalid line length input: Line " + inNum);
                 }
                 if (!error){
                     lineLen = ret;
@@ -66,6 +67,7 @@ public class FormatE {
                     justif = 2;
                 } else {
                     //print error
+                    errors.add("Invalid formatting command: Line " + inNum);
                 }
                 break;
             case 'l':
@@ -74,6 +76,7 @@ public class FormatE {
                     justif = 0;
                 } else {
                     //print error
+                    errors.add("Invalid formatting command: Line " + inNum);
                 }
                 break;
             case 'c':
@@ -82,6 +85,7 @@ public class FormatE {
                     justif = 1;
                 } else {
                     //print error
+                    errors.add("Invalid formatting command: Line" + inNum);
                 }
                 break;
             case 'e':
@@ -90,6 +94,7 @@ public class FormatE {
                     equal = true;
                 } else {
                     //print error
+                    errors.add("Invalid formatting command: Line " + inNum);
                 }
                 break;
             case 'w':
@@ -101,6 +106,7 @@ public class FormatE {
                     wrapping = false;
                 } else {
                     //error
+                    errors.add("Invalid wrapping option: Line " + inNum);
                 }
                 break;
             case 's':
@@ -109,6 +115,7 @@ public class FormatE {
                     doubleSpace = false;
                 } else {
                     //print error
+                    errors.add("Invalid formatting command: Line " + inNum);
                 }
                 break;
             case 'd':
@@ -117,6 +124,7 @@ public class FormatE {
                     doubleSpace = true;
                 } else {
                     //print error
+                    errors.add("Invalid formatting command: Line " + inNum);
                 }
                 break;
             case 't':
@@ -125,6 +133,7 @@ public class FormatE {
                     qTitle = true;
                 } else {
                     //print error
+                    errors.add("Invalid formatting command: Line " + inNum);
                 }
                 break;
             case 'p':
@@ -141,15 +150,19 @@ public class FormatE {
                     ret = Integer.parseInt(temp);
                 } catch (Exception e){
                     error = true;
+                    // write error
+                    errors.add("Invalid blank line input: Line " + inNum);
                 }
                 if (!error){
                     if (ret > 0){
                         blanks = ret;
                     } else {
                         //write error
+                        errors.add("Invalid number of blank lines: Line " + inNum);
                     }
                 } else {
                     //write error
+                    errors.add("Invalid formatting command: Line " + inNum);
                 }
                 break;
             case 'a':
@@ -161,6 +174,8 @@ public class FormatE {
                     ret = Integer.parseInt(temp);
                 } catch (Exception e){
                     error = true;
+                    // write error
+                    errors.add("Invalid column number: Line " + inNum);
                 }
                 if (!error){
                     if (ret == 1){
@@ -169,13 +184,16 @@ public class FormatE {
                         twoCol = true;
                     } else {
                         //write error
+                        errors.add("Invalid amount of columns: Line " + inNum);
                     }
                 } else {
                     //write error
+                    errors.add("Invalid formatting command: Line " + inNum);
                 }
                 break;
             default:
-                //couldnt understand command error
+                //couldn't understand command error
+                errors.add("Invalid formatting command: Line "+ inNum);
         }
     }
     
